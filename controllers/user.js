@@ -16,16 +16,10 @@ module.exports = {
         throw new Error('该手机号已存在')
       } else {
         await User.create({ phoneNumber, nickname })
-        ctx.body = {
-          code: '0'
-        }
+        ctx.success()
       }
     } catch (e) {
-      console.log(e)
-      ctx.body = {
-        code: '-1',
-        msg: e.message,
-      }
+      ctx.error(e.message)
     }
   }
 }

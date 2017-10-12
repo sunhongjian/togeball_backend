@@ -32,6 +32,7 @@ app.use(async (ctx, next) => {
 })
 
 
+app.use(require('./middleware/response_formatter'));
 // app.use(loggers())
 
 app.use(views(__dirname + '/views', {
