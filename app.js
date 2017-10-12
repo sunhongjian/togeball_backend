@@ -5,9 +5,10 @@ const views = require('koa-views')
 const json = require('koa-json')
 const onerror = require('koa-onerror')
 const bodyparser = require('koa-bodyparser')
-const logger = require('koa-logger')
+
 const cors = require('koa2-cors') // 跨域插件
-const loggers = require('./middleware/loggers') // 本地日志
+const log4js = require('koa-log4')
+const logger = log4js.getLogger('app')
 
 const index = require('./routes/index')
 const users = require('./routes/users')
@@ -21,10 +22,17 @@ app.use(bodyparser({
 }))
 app.use(cors())
 app.use(json())
-app.use(logger())
 app.use(require('koa-static')(__dirname + '/public'))
+app.use(log4js.koaLogger(log4js.getLogger('http'), { level: 'auto' }))
+app.use(async (ctx, next) => {
+  const start = new Date()
+  await next()
+  const ms = new Date() - start
+  logger.info('%s %s - %s', ctx.method, ctx.url, ms)
+})
 
-app.use(convert(loggers()));
+
+// app.use(loggers())
 
 app.use(views(__dirname + '/views', {
   extension: 'pug'
