@@ -11,22 +11,25 @@ var Schema = mongoose.Schema;
  * @type {mongoose}
  */
 var UserSchema = new Schema({
-	phoneNumber: {
+  phoneNumber: {
     unique: true,
-    type: String
+    type: String,
+    required: [true, '手机号不允许为空'],
+    validate: {
+      validator: function(v) {
+        return /^1[0-9]{10}$/.test(v);
+      },
+      message: '手机号格式错误!'
+    },
   },
-  areaCode: String,
-  verifyCode: String,
-  verified: {
-    type: Boolean,
-    default: false
+  nickname: {
+    type: String,
+    required: [true, '昵称不允许为空']
   },
-  accessToken: String,
-  nickname: String,
-  gender: String,
-  breed: String,
-  age: String,
-  avatar: String,
+  age: {
+    type: String,
+    required: [true, '年龄不允许为空']
+  },
   meta: {
     createAt: {
       type: Date,
@@ -57,6 +60,23 @@ var UserSchema = new Schema({
  * @type {[type]}
  */
 // 参数User 数据库中的集合名称, 不存在会创建.
+
+// 如果手机号重复,则返回错误
+UserSchema.post('save', function (error, doc, next) {
+  if (error.errors) {
+    var msg = ''
+    for (var key in error.errors) {
+      msg += error.errors[key].message + ','
+    }
+    msg=msg.replace(/,$/gi,""); 
+    next(new Error(msg));
+  }
+  if (error.name === 'MongoError' && error.code === 11000) {
+    next(new Error('该手机号已经被使用'));
+  } else {
+    next(error);
+  }
+});
 var User = mongoose.model('User', UserSchema)
 
 module.exports = User
