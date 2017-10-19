@@ -1,4 +1,3 @@
-'use strict'
 
 var mongoose = require('mongoose')
 var Schema = mongoose.Schema;
@@ -14,9 +13,9 @@ var UserSchema = new Schema({
   phoneNumber: {
     unique: true,
     type: String,
-    required: [true, '手机号不允许为空'],
+    required: [false, '手机号不允许为空'],
     validate: {
-      validator: function(v) {
+      validator: function (v) {
         return /^1[0-9]{10}$/.test(v);
       },
       message: '手机号格式错误!'
@@ -24,23 +23,23 @@ var UserSchema = new Schema({
   },
   nickname: {
     type: String,
+    unique: [true, '重复'],
     required: [true, '昵称不允许为空']
   },
   age: {
     type: String,
-    required: [true, '年龄不允许为空']
   },
-  meta: {
-    createAt: {
-      type: Date,
-      dafault: Date.now()
-    },
-    updateAt: {
-      type: Date,
-      dafault: Date.now()
-    }
+  createTime: {
+    type: Date,
+    dafault: Date.now()
+  },
+  updateTime: {
+    type: Date,
+    dafault: Date.now()
   }
-})
+}, {
+    timestamps: { createdAt: 'createTime', updatedAt: 'updateTime' }
+  })
 
 // Defines a pre hook for the document.
 // UserSchema.pre('save', function(next) {
@@ -68,11 +67,11 @@ UserSchema.post('save', function (error, doc, next) {
     for (var key in error.errors) {
       msg += error.errors[key].message + ','
     }
-    msg=msg.replace(/,$/gi,""); 
+    msg = msg.replace(/,$/gi, "");
     next(new Error(msg));
   }
   if (error.name === 'MongoError' && error.code === 11000) {
-    next(new Error('该手机号已经被使用'));
+    next(new Error('用户已经存在'));
   } else {
     next(error);
   }

@@ -11,7 +11,7 @@ const log4js = require('koa-log4')
 const logger = log4js.getLogger('app')
 
 const index = require('./routes/index')
-const users = require('./routes/users')
+const api = require('./routes/api')
 
 // error handler
 onerror(app)
@@ -41,6 +41,6 @@ app.use(views(__dirname + '/views', {
 
 // routes
 app.use(index.routes(), index.allowedMethods())
-app.use(users.routes(), users.allowedMethods())
+app.use(api.routes(), api.allowedMethods())
 
 module.exports = app

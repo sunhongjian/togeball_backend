@@ -1,9 +1,15 @@
 const router = require('koa-router')()
 const controllers = require('../controllers/user')
 const user = require('../controllers/user')
-router.prefix('/users')
+const ground  = require('../controllers/ground')
+router.prefix('/api')
 
-router.post('/', controllers.get)
+// 用户操作
+router.post('/user', controllers.post)
+router.put('/user', controllers.put)
+
+// 运动场
+router.post('/ground', ground.post)
 
 router.get('/bar', function (ctx, next) {
   ctx.body = 'this is a users/bar response'
