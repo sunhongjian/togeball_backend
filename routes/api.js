@@ -13,6 +13,7 @@ router.get('/user', user.get)
 router.post('/ground', ground.post)
 
 // 比赛
+router.get('/match', match.get)
 router.post('/match', match.post)
 
 router.get('/bar', function (ctx, next) {
