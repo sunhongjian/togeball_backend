@@ -1,13 +1,27 @@
 const User = require('../models/user.model.js')
 // test api
 module.exports = {
+  get: async (ctx, next) => {
+    const data = ctx.query
+    const param = {
+      _id: data.id,
+    }
+    try {
+      const result = await User.findOne(param).populate('ground')
+      console.log( result )
+      ctx.success({ result })
+    } catch (e) {
+      ctx.error(e.message)
+    }
+  },
   // 添加
   post: async (ctx, next) => {
     const data = ctx.request.body
     const param = {
       phoneNumber: data.phoneNumber,
       nickname: data.nickname,
-      age: data.age
+      age: data.age,
+      ground: data.groundId
     }
 
     try {

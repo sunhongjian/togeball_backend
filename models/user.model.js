@@ -29,6 +29,7 @@ var UserSchema = new Schema({
   age: {
     type: String,
   },
+  ground: {type: Schema.Types.ObjectId, ref: 'Ground'},
   createTime: {
     type: Date,
     dafault: Date.now()
