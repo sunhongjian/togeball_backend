@@ -1,4 +1,5 @@
 const User = require('../models/user.model.js')
+const createToken = require('../middleware/token/createToken')
 // test api
 module.exports = {
   get: async (ctx, next) => {
@@ -14,14 +15,15 @@ module.exports = {
       ctx.error(e.message)
     }
   },
-  // 添加
-  post: async (ctx, next) => {
+  // 注册新用户
+  register: async (ctx, next) => {
     const data = ctx.request.body
     const param = {
       phoneNumber: data.phoneNumber,
       nickname: data.nickname,
       age: data.age,
-      ground: data.groundId
+      ground: data.groundId,
+      token: createToken(this.phoneNumber)
     }
 
     try {
