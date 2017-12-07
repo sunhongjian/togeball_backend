@@ -13,7 +13,7 @@ var UserSchema = new Schema({
   phoneNumber: {
     unique: true,
     type: String,
-    required: [false, '手机号不允许为空'],
+    // required: [false, '手机号不允许为空'],
     validate: {
       validator: function (v) {
         return /^1[0-9]{10}$/.test(v);
@@ -21,18 +21,29 @@ var UserSchema = new Schema({
       message: '手机号格式错误!'
     },
   },
+  // 用户名
+  userName: {
+    type: String,
+    unique: true,
+    required: [false, '用户名不允许为空']
+  },
+  // 密码,经过sha1加密后的
+  password: {
+    type: String,
+    unique: true,
+    required: [false, '密码不允许为空']
+  },
   nickname: {
     type: String,
-    unique: [true, '重复'],
-    required: [true, '昵称不允许为空']
   },
   age: {
     type: String,
   },
+  // 登录凭证
   token: {
     type: String,
   },
-  ground: {type: Schema.Types.ObjectId, ref: 'Ground'},
+  ground: { type: Schema.Types.ObjectId, ref: 'Ground' },
   createTime: {
     type: Date,
     dafault: Date.now()

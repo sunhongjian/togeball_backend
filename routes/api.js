@@ -7,6 +7,7 @@ router.prefix('/api')
 
 // 用户操作
 router.post('/register', user.register)
+router.post('/login', user.login)
 router.put('/user', user.put)
 router.get('/user', user.get)
 
